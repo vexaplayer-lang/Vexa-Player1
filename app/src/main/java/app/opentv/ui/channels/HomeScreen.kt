@@ -496,21 +496,6 @@ fun HomeScreen(
                         onExitLeftFromChannel = onExitLeftChannel,
                         modifier = Modifier.weight(1f).padding(start = 12.dp, end = 12.dp),
                     )
-                } else {
-                    GuideGrid(
-                        rows = rows,
-                        windowStartMillis = windowStart,
-                        dayOffset = guideDayOffset,
-                        selectedKey = highlightedRow?.key,
-                        // OK on a channel opens its menu: Watch, Record now, Schedule a later show,
-                        // Record series. The preview already follows the highlight as you browse.
-                        onSelectRow = { row -> channelMenu = row },
-                        onFocusRow = onFocusChannel,
-                        onProgramme = { row, programme -> recordTarget = row to programme },
-                        onToggleFavourite = { viewModel.toggleFavourite(it) },
-                        onExitLeftFromChannel = onExitLeftChannel,
-                        modifier = Modifier.weight(1f).padding(start = 12.dp, end = 12.dp),
-                    )
                 }
             }
         }

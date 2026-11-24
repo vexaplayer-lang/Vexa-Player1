@@ -75,7 +75,7 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
-            android:screenOrientation="fullUser"
+            android:screenOrientation="landscape"
             android:theme="@style/Theme.OpenTV">
 
             <!-- Phones and tablets -->

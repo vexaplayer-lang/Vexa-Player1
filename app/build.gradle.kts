@@ -8,14 +8,14 @@ plugins {
 
 android {
     namespace = "app.opentv"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "app.vexaplayer"
         minSdk = 23
-        targetSdk = 35
-        versionCode = 23
-        versionName = "0.11.11"
+        targetSdk = 36
+        versionCode = 24
+        versionName = "0.11.12"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

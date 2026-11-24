@@ -11,7 +11,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "app.opentv"
+        applicationId = "app.vexaplayer"
         minSdk = 23
         targetSdk = 35
         versionCode = 22
@@ -21,8 +21,7 @@ android {
 
     signingConfigs {
         create("upload") {
-            // Populated from environment variables in CI. Absent locally, which is why the
-            // release build type falls back to the debug key below.
+            // Loaded from GitHub Actions environment variables for signed releases.
             val storePath = providers.environmentVariable("KEYSTORE_PATH").orNull
             if (storePath != null) {
                 storeFile = file(storePath)
@@ -42,24 +41,7 @@ android {
                 "proguard-rules.pro",
             )
 
-            /*
-             * Falls back to the debug key when no keystore is configured.
-             *
-             * An *unsigned* APK cannot be installed on Android at all — it is rejected before
-             * the user sees anything, with an error that explains nothing. For an early
-             * project that means every tester is blocked on the maintainer setting up signing
-             * infrastructure first.
-             *
-             * The trade-off is real and is written up in docs/RELEASING.md: moving to a
-             * proper keystore later changes the signature, and Android will refuse to upgrade
-             * over a debug-signed install. Set up real signing before announcing publicly.
-             */
-            signingConfig =
-                if (providers.environmentVariable("KEYSTORE_PATH").orNull != null) {
-                    signingConfigs.getByName("upload")
-                } else {
-                    signingConfigs.getByName("debug")
-                }
+            signingConfig = signingConfigs.getByName("upload")
         }
         debug {
             applicationIdSuffix = ".debug"

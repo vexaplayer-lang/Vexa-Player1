@@ -159,65 +159,43 @@ fun GuidePreviewList(
 
         Spacer(Modifier.height(10.dp))
 
-        // ---- Now / next detail ------------------------------------------------------------
-        Column(Modifier.weight(1f).fillMaxWidth()) {
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                // ---- Day navigation (Sky Q-style): ‹ Today › ----------------------------
-                // Only shown once the caller wires a label in; keeps older callers unchanged.
-                if (dayLabel.isNotEmpty()) {
-                    IconButton(onClick = onPrevDay, enabled = canGoPrevDay) {
-                        Icon(
-                            Icons.Default.KeyboardArrowLeft,
-                            contentDescription = stringResource(R.string.guide_prev_day),
-                            tint = if (canGoPrevDay) MaterialTheme.colorScheme.onSurface
-                            else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-                        )
-                    }
-                    Text(
-                        dayLabel,
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.SemiBold,
-                        maxLines = 1,
+        // Controls: recording, refresh and add source. EPG navigation is removed.
+        Row(
+            Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Spacer(Modifier.weight(1f))
+
+            if (row != null) {
+                IconButton(onClick = onRecord) {
+                    Icon(
+                        if (isRecording) Icons.Default.Stop else Icons.Default.FiberManualRecord,
+                        contentDescription = if (isRecording)
+                            stringResource(R.string.guide_cd_stop_recording)
+                        else
+                            stringResource(R.string.guide_cd_record_now),
+                        tint = Color(0xFFE53935),
                     )
-                    IconButton(onClick = onNextDay) {
-                        Icon(
-                            Icons.Default.KeyboardArrowRight,
-                            contentDescription = stringResource(R.string.guide_next_day),
-                        )
-                    }
-                }
-                Spacer(Modifier.weight(1f))
-                if (row != null) {
-                    IconButton(onClick = onRecord) {
-                        // Red throughout — the record convention — but the glyph switches to a
-                        // stop square while a recording is running, so a press visibly does
-                        // something (● start → ■ stop) rather than looking inert.
-                        Icon(
-                            if (isRecording) Icons.Default.Stop else Icons.Default.FiberManualRecord,
-                            contentDescription = if (isRecording) stringResource(R.string.guide_cd_stop_recording) else stringResource(R.string.guide_cd_record_now),
-                            tint = Color(0xFFE53935),
-                        )
-                    }
-                }
-                IconButton(onClick = onRefresh) {
-                    Icon(Icons.Default.Refresh, contentDescription = stringResource(R.string.guide_cd_refresh))
-                }
-                IconButton(onClick = onAddSource) {
-                    Icon(Icons.Default.Add, contentDescription = stringResource(R.string.guide_cd_add_source))
                 }
             }
 
-            if (row == null) {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart) {
-                    Text(
-                        stringResource(R.string.guide_highlight_hint),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                }
-                return@Column
+            IconButton(onClick = onRefresh) {
+                Icon(
+                    Icons.Default.Refresh,
+                    contentDescription = stringResource(R.string.guide_cd_refresh),
+                )
             }
 
+            IconButton(onClick = onAddSource) {
+                Icon(
+                    Icons.Default.Add,
+                    contentDescription = stringResource(R.string.guide_cd_add_source),
+                )
+            }
+        }
+
+        // Channel identity only. EPG programme details are intentionally hidden.
+        if (row != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     row.primary.shownName,
@@ -235,55 +213,12 @@ fun GuidePreviewList(
                     )
                 }
             }
-
-            Spacer(Modifier.height(10.dp))
-
-            val nowProg = row.now
-            if (nowProg != null) {
-                Text(
-                    "${formatTime(nowProg.startUtcMillis)}–${formatTime(nowProg.endUtcMillis)}   ${nowProg.title}",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Spacer(Modifier.height(6.dp))
-                LinearProgressIndicator(
-                    progress = { nowProg.progressAt(nowMillis) },
-                    modifier = Modifier.fillMaxWidth().height(4.dp).clip(RoundedCornerShape(2.dp)),
-                )
-                nowProg.description?.takeIf { it.isNotBlank() }?.let { synopsis ->
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        synopsis,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                }
-            } else {
-                Text(
-                    stringResource(R.string.guide_no_info_channel),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
-
-            row.next?.let { next ->
-                Spacer(Modifier.weight(1f))
-                Text(
-                    stringResource(R.string.guide_next_prefix, formatTime(next.startUtcMillis), next.title),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
+        } else {
+            Text(
+                stringResource(R.string.guide_highlight_hint),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                style = MaterialTheme.typography.titleMedium,
+            )
         }
     }
 }
-
-private val previewTimeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-
-private fun formatTime(utcMillis: Long): String = previewTimeFormat.format(Date(utcMillis))

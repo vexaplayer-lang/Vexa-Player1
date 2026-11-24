@@ -265,9 +265,11 @@ class AppSettings private constructor(context: Context) {
         runCatching { ThemeMode.valueOf(prefs.getString(KEY_THEME, null) ?: "") }
             .getOrDefault(ThemeMode.SYSTEM)
 
-    private fun readChannelLayout(): ChannelLayout =
-        runCatching { ChannelLayout.valueOf(prefs.getString(KEY_CHANNEL_LAYOUT, null) ?: "") }
-            .getOrDefault(ChannelLayout.GRID)
+    private fun readChannelLayout(): ChannelLayout {
+        // Vexa Player uses the compact channel list beside the live preview.
+        prefs.edit().putString(KEY_CHANNEL_LAYOUT, ChannelLayout.LIST.name).apply()
+        return ChannelLayout.LIST
+    }
 
     // ---- Recording ---------------------------------------------------------------------------
 

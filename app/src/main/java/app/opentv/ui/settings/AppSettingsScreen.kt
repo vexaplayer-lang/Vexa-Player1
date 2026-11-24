@@ -168,12 +168,8 @@ fun AppSettingsScreen(onBack: () -> Unit) {
                 style = MaterialTheme.typography.titleMedium,
             )
             ThemeOption(
-                stringResource(R.string.settings_channel_layout_grid),
-                channelLayout == AppSettings.ChannelLayout.GRID,
-            ) { settings.setChannelLayout(AppSettings.ChannelLayout.GRID) }
-            ThemeOption(
                 stringResource(R.string.settings_channel_layout_list),
-                channelLayout == AppSettings.ChannelLayout.LIST,
+                true,
             ) { settings.setChannelLayout(AppSettings.ChannelLayout.LIST) }
             Spacer(Modifier.height(8.dp))
             ToggleRow(

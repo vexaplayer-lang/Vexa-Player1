@@ -37,11 +37,16 @@ jobs:
       - name: Assemble debug APK
         run: ./gradlew assembleDebug --stacktrace
 
+      - name: Name debug APK
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/*.apk dist/Vexa-Player.apk
+
       - name: Upload debug APK
         uses: actions/upload-artifact@v4
         with:
-          name: opentv-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: Vexa-Player
+          path: dist/Vexa-Player.apk
           if-no-files-found: error
 
       - name: Upload test reports

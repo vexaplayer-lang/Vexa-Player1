@@ -417,22 +417,6 @@ fun HomeScreen(
                         SimpleDateFormat("EEE d MMM", Locale.getDefault()).format(Date(windowStart))
                     }
                 }
-                GuidePreview(
-                    row = highlightedRow,
-                    nowMillis = nowMillis,
-                    onWatch = { highlightedRow?.let { goFullscreen(it.primary) } },
-                    onRefresh = onRefresh,
-                    onAddSource = onAddSource,
-                    previewPlayer = if (previewEnabled && !recordingActive) previewController.player else null,
-                    isRecording = highlightedRow?.primary?.id?.let { id ->
-                        activeRecordings.any { it.channelId == id }
-                    } == true,
-                    onRecord = { recordSelected() },
-                    dayLabel = dayLabel,
-                    canGoPrevDay = guideDayOffset > 0,
-                    onPrevDay = { viewModel.nudgeGuideDay(-1) },
-                    onNextDay = { viewModel.nudgeGuideDay(1) },
-                )
                 // Shared by both layouts: focus follows the highlight and collapses the rail; LEFT
                 // from the leftmost element reopens the rail (consumed only when it was hidden).
                 val onFocusChannel: (ChannelsViewModel.Row) -> Unit = {
@@ -448,12 +432,66 @@ fun HomeScreen(
                         false
                     }
                 }
+
                 if (channelLayout == AppSettings.ChannelLayout.LIST) {
-                    ChannelList(
+                    Row(Modifier.fillMaxSize()) {
+                        GuidePreviewList(
+                            row = highlightedRow,
+                            nowMillis = nowMillis,
+                            onWatch = { highlightedRow?.let { goFullscreen(it.primary) } },
+                            onRefresh = onRefresh,
+                            onAddSource = onAddSource,
+                            previewPlayer = if (previewEnabled && !recordingActive) previewController.player else null,
+                            isRecording = highlightedRow?.primary?.id?.let { id ->
+                                activeRecordings.any { it.channelId == id }
+                            } == true,
+                            onRecord = { recordSelected() },
+                            dayLabel = dayLabel,
+                            canGoPrevDay = guideDayOffset > 0,
+                            onPrevDay = { viewModel.nudgeGuideDay(-1) },
+                            onNextDay = { viewModel.nudgeGuideDay(1) },
+                        modifier = Modifier.weight(0.9f).fillMaxHeight(),
+                        )
+
+                        ChannelList(
+                            rows = rows,
+                            selectedKey = highlightedRow?.key,
+                            onSelectRow = { row -> channelMenu = row },
+                            onFocusRow = onFocusChannel,
+                            onToggleFavourite = { viewModel.toggleFavourite(it) },
+                            onExitLeftFromChannel = onExitLeftChannel,
+                            modifier = Modifier
+                                .weight(1.1f)
+                                .fillMaxHeight()
+                                .padding(start = 8.dp, end = 12.dp),
+                        )
+                    }
+                } else {
+                    GuidePreview(
+                        row = highlightedRow,
+                        nowMillis = nowMillis,
+                        onWatch = { highlightedRow?.let { goFullscreen(it.primary) } },
+                        onRefresh = onRefresh,
+                        onAddSource = onAddSource,
+                        previewPlayer = if (previewEnabled && !recordingActive) previewController.player else null,
+                        isRecording = highlightedRow?.primary?.id?.let { id ->
+                            activeRecordings.any { it.channelId == id }
+                        } == true,
+                        onRecord = { recordSelected() },
+                        dayLabel = dayLabel,
+                        canGoPrevDay = guideDayOffset > 0,
+                        onPrevDay = { viewModel.nudgeGuideDay(-1) },
+                        onNextDay = { viewModel.nudgeGuideDay(1) },
+                    )
+
+                    GuideGrid(
                         rows = rows,
+                        windowStartMillis = windowStart,
+                        dayOffset = guideDayOffset,
                         selectedKey = highlightedRow?.key,
                         onSelectRow = { row -> channelMenu = row },
                         onFocusRow = onFocusChannel,
+                        onProgramme = { row, programme -> recordTarget = row to programme },
                         onToggleFavourite = { viewModel.toggleFavourite(it) },
                         onExitLeftFromChannel = onExitLeftChannel,
                         modifier = Modifier.weight(1f).padding(start = 12.dp, end = 12.dp),

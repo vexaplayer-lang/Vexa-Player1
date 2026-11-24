@@ -76,7 +76,7 @@ fun AboutScreen(onBack: () -> Unit) {
         Spacer(Modifier.height(20.dp))
 
         Section(stringResource(R.string.about_version)) {
-            Text("OpenTV ${BuildConfig.VERSION_NAME}", style = MaterialTheme.typography.titleMedium)
+            Text("VexaPlayer ${BuildConfig.VERSION_NAME}", style = MaterialTheme.typography.titleMedium)
             Spacer(Modifier.height(12.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 OutlinedButton(
@@ -139,28 +139,9 @@ fun AboutScreen(onBack: () -> Unit) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Spacer(Modifier.height(12.dp))
-            LinkLine(stringResource(R.string.about_sponsor_github), "github.com/sponsors/legionnaireneyland")
             Spacer(Modifier.height(12.dp))
-            LinkLine(
-                stringResource(R.string.about_donate_paypal),
-                "leetobin1982@gmail.com",
-                url = "https://www.paypal.com/donate/?business=leetobin1982@gmail.com&item_name=Support+OpenTV&no_recurring=0&currency_code=GBP",
-            )
+            Text("Donate via PayPal: vexaplayer@gmail.com", style = MaterialTheme.typography.bodyMedium)
             Spacer(Modifier.height(12.dp))
-            val donateQr = remember { QrCodes.render("https://github.com/sponsors/legionnaireneyland", 400) }
-            donateQr?.let { bmp ->
-                Image(
-                    bitmap = bmp.asImageBitmap(),
-                    contentDescription = stringResource(R.string.about_scan_to_donate),
-                    modifier = Modifier.size(180.dp).clip(RoundedCornerShape(8.dp)),
-                )
-                Spacer(Modifier.height(6.dp))
-                Text(
-                    stringResource(R.string.about_scan_to_donate),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
         }
 
         Spacer(Modifier.height(16.dp))

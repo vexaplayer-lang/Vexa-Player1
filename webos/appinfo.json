@@ -1,0 +1,10 @@
+{
+  "id": "com.vexa.player",
+  "version": "1.0.0",
+  "vendor": "Vexa Player",
+  "type": "web",
+  "main": "index.html",
+  "title": "Vexa Player",
+  "icon": "icon.png",
+  "resolution": "1920x1080"
+}

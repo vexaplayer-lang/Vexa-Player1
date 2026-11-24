@@ -1,0 +1,38 @@
+name: Build Vexa Player WebOS
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'webos/**'
+      - '.github/workflows/webos.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-webos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install webOS CLI
+        run: npm install -g @webos-tools/cli
+
+      - name: Package WebOS app
+        run: ares-package ./webos
+
+      - name: Upload WebOS IPK
+        uses: actions/upload-artifact@v4
+        with:
+          name: vexa-player-webos
+          path: '*.ipk'
+          if-no-files-found: error

@@ -306,6 +306,7 @@ private fun NavRail(
         }
         Spacer(Modifier.height(8.dp))
 
+        RailItem(Icons.Filled.Settings, stringResource(R.string.nav_settings), expanded, false, onOpenSettings)
         tabs.forEach { t ->
             RailItem(t.icon, stringResource(t.labelRes), expanded, current == t) { onSelect(t) }
         }
@@ -315,7 +316,6 @@ private fun NavRail(
 
         RailItem(Icons.Filled.Search, stringResource(R.string.nav_search), expanded, false, onOpenSearch)
         RailItem(Icons.Filled.Person, activeProfileName, expanded, false, onOpenProfiles)
-        RailItem(Icons.Filled.Settings, stringResource(R.string.nav_settings), expanded, false, onOpenSettings)
     }
 }
 

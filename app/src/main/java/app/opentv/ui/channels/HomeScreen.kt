@@ -305,7 +305,7 @@ fun HomeScreen(
                 .padding(vertical = 16.dp),
         ) {
             Text(
-                stringResource(R.string.nav_live_tv),
+                "Vexa Player",
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(horizontal = 20.dp),
             )
